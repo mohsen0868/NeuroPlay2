@@ -1,0 +1,586 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#173b59">
+<title>NeuroCognitive | سامانه ارزیابی شناختی</title>
+<style>
+:root {
+  --navy:#173b59;
+  --blue:#2878a5;
+  --green:#26836f;
+  --bg:#f2f6f9;
+  --white:#fff;
+  --text:#233747;
+  --muted:#718395;
+  --border:#dce5ec;
+  --orange:#e89a42;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Tahoma,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+header{
+  background:linear-gradient(120deg,#173b59,#2878a5);
+  color:white;
+  padding:25px 18px;
+}
+.header-inner{
+  max-width:950px;
+  margin:auto;
+}
+header h1{margin:0 0 8px;font-size:25px}
+header p{margin:0;color:#dcecf6;font-size:13px}
+main{max-width:950px;margin:22px auto;padding:0 14px}
+.card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:20px;
+  margin-bottom:17px;
+  box-shadow:0 3px 12px #173b5909;
+}
+h2{font-size:18px;margin:0 0 16px;color:var(--navy)}
+h3{font-size:15px}
+label{display:block;font-size:13px;margin:12px 0 7px}
+input,select{
+  width:100%;
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  font-family:inherit;
+  font-size:14px;
+  background:white;
+}
+button{
+  font-family:inherit;
+  border:0;
+  border-radius:9px;
+  padding:12px 17px;
+  cursor:pointer;
+  font-size:14px;
+  font-weight:bold;
+}
+button:disabled{opacity:.45;cursor:not-allowed}
+.primary{background:var(--blue);color:white}
+.success{background:var(--green);color:white}
+.secondary{background:#e9f0f5;color:var(--navy)}
+.danger{background:#fbe9e7;color:#a33}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:12px;
+}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+.notice{
+  background:#eaf3f8;
+  border-right:4px solid var(--blue);
+  padding:12px;
+  border-radius:8px;
+  font-size:13px;
+  line-height:2;
+}
+.muted{color:var(--muted);font-size:12px;line-height:2}
+.hidden{display:none!important}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
+  gap:10px;
+}
+.stat{
+  background:#f1f6f9;
+  border-radius:10px;
+  padding:13px;
+  text-align:center;
+}
+.stat strong{display:block;font-size:23px;color:var(--blue)}
+.stat span{font-size:12px;color:var(--muted)}
+.task-area{
+  background:#102e46;
+  color:white;
+  border-radius:14px;
+  padding:25px 15px;
+  text-align:center;
+}
+.stimulus{
+  min-height:145px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:65px;
+  font-weight:bold;
+}
+.progress{
+  height:8px;
+  background:#dce5ec;
+  border-radius:10px;
+  overflow:hidden;
+  margin:15px 0;
+}
+.progress div{
+  height:100%;
+  width:0;
+  background:var(--green);
+  transition:width .2s;
+}
+#respondBtn{
+  width:100%;
+  max-width:350px;
+  min-height:65px;
+  font-size:19px;
+  margin-top:16px;
+}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{padding:10px;border-bottom:1px solid var(--border);text-align:right}
+footer{
+  text-align:center;
+  color:var(--muted);
+  font-size:11px;
+  padding:20px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div class="header-inner">
+  <h1>NeuroCognitive</h1>
+  <p>سامانه ارزیابی و ثبت عملکردهای شناختی</p>
+ </div>
+</header>
+
+<main>
+
+<section class="card">
+ <h2>پنل اصلی</h2>
+ <div class="grid">
+  <div class="stat">
+   <strong id="totalCount">0</strong>
+   <span>تعداد آزمون‌های ثبت‌شده</span>
+  </div>
+  <div class="stat">
+   <strong>1</strong>
+   <span>تکلیف فعال</span>
+  </div>
+  <div class="stat">
+   <strong>0.1</strong>
+   <span>نسخه نرم‌افزار</span>
+  </div>
+ </div>
+</section>
+
+<section class="card" id="setup">
+ <h2>۱. ثبت مشخصات آزمودنی</h2>
+ <div class="grid">
+  <div>
+   <label for="participant">کد آزمودنی *</label>
+   <input id="participant" placeholder="مثلاً P001">
+  </div>
+  <div>
+   <label for="age">سن (سال)</label>
+   <input id="age" type="number" min="3" max="100" placeholder="مثلاً ۶">
+  </div>
+  <div>
+   <label for="gender">جنسیت</label>
+   <select id="gender">
+    <option value="">انتخاب نشده</option>
+    <option value="دختر">دختر</option>
+    <option value="پسر">پسر</option>
+    <option value="سایر/ثبت نشده">ثبت نشده</option>
+   </select>
+  </div>
+  <div>
+   <label for="session">شماره جلسه</label>
+   <input id="session" type="number" min="1" value="1">
+  </div>
+ </div>
+ <p class="muted">برای حفظ محرمانگی، از کد استفاده کنید و نام و اطلاعات هویتی کودک را وارد نکنید.</p>
+</section>
+
+<section class="card">
+ <h2>۲. انتخاب تکلیف شناختی</h2>
+ <div class="notice">
+  <strong>تکلیف توجه انتخابی ـ نسخه آزمایشی</strong><br>
+  در این تکلیف اعداد مختلف نمایش داده می‌شوند. آزمودنی باید هنگام مشاهده عدد ۳ دکمه پاسخ را فشار دهد.
+ </div>
+ <div class="actions">
+  <button class="primary" id="startBtn">شروع آزمون توجه</button>
+  <button class="secondary" id="instructionsBtn">راهنمای اجرا</button>
+ </div>
+</section>
+
+<section class="card hidden" id="task">
+ <h2>۳. اجرای آزمون</h2>
+ <div class="progress"><div id="progressBar"></div></div>
+ <p class="muted" id="trialInfo">آماده شروع</p>
+ <div class="task-area">
+  <div class="stimulus" id="stimulus">+</div>
+  <p id="taskMessage">برای پاسخ، دکمه پایین را فشار دهید.</p>
+ </div>
+ <div style="text-align:center">
+  <button class="success" id="respondBtn" disabled>مشاهده عدد ۳</button>
+ </div>
+ <p class="muted">لطفاً در محیط آرام و با حداقل عوامل مزاحم اجرا کنید.</p>
+</section>
+
+<section class="card hidden" id="result">
+ <h2>۴. نتایج آزمون</h2>
+ <div class="stats">
+  <div class="stat"><strong id="hits">0</strong><span>پاسخ صحیح</span></div>
+  <div class="stat"><strong id="misses">0</strong><span>عدم پاسخ به هدف</span></div>
+  <div class="stat"><strong id="falseAlarms">0</strong><span>پاسخ اشتباه</span></div>
+  <div class="stat"><strong id="accuracy">0%</strong><span>درصد پاسخ صحیح</span></div>
+  <div class="stat"><strong id="meanRT">-</strong><span>میانگین زمان واکنش (ms)</span></div>
+ </div>
+ <div class="actions">
+  <button class="primary" id="saveBtn">ذخیره نتایج</button>
+  <button class="secondary" id="againBtn">اجرای مجدد</button>
+ </div>
+ <p class="muted" id="saveMessage"></p>
+</section>
+
+<section class="card">
+ <h2>۵. اطلاعات ذخیره‌شده</h2>
+ <p class="muted">نتایج در حافظه محلی همین مرورگر نگهداری می‌شوند.</p>
+ <div class="actions">
+  <button class="secondary" id="jsonBtn">دریافت خروجی JSON</button>
+  <button class="secondary" id="csvBtn">دریافت خروجی CSV</button>
+ </div>
+ <div style="overflow-x:auto;margin-top:15px">
+  <table>
+   <thead>
+    <tr>
+     <th>کد</th>
+     <th>تاریخ</th>
+     <th>صحیح</th>
+     <th>خطا</th>
+     <th>میانگین RT</th>
+    </tr>
+   </thead>
+   <tbody id="history">
+    <tr><td colspan="5">هنوز داده‌ای ثبت نشده است.</td></tr>
+   </tbody>
+  </table>
+ </div>
+</section>
+
+<section class="card">
+ <h2>درباره سامانه</h2>
+ <p class="muted">
+ NeuroCognitive یک بستر اولیه برای طراحی، اجرای و ثبت تکالیف شناختی است.
+ این نسخه برای توسعه پژوهشی طراحی شده و نتایج آن به‌تنهایی مبنای تشخیص بالینی نیستند.
+ </p>
+</section>
+
+</main>
+
+<footer>
+NeuroCognitive Research Platform | Version 0.1
+</footer>
+
+<script>
+"use strict";
+
+const STORAGE_KEY = "neurocognitive_results_v1";
+
+const $ = id => document.getElementById(id);
+
+let trials = [];
+let current = 0;
+let active = false;
+let stimulusStarted = 0;
+let timer = null;
+let results = null;
+let participant = null;
+
+function getData(){
+ try {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+ } catch(e) {
+  return [];
+ }
+}
+
+function setData(data){
+ localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function downloadFile(content, filename, type){
+ const blob = new Blob(["\uFEFF",content],{type});
+ const url = URL.createObjectURL(blob);
+ const a = document.createElement("a");
+ a.href = url;
+ a.download = filename;
+ a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+function makeTrials(){
+ const list = [];
+ for(let i=0;i<40;i++){
+  const target = i % 4 === 0;
+  let digit;
+  if(target){
+   digit = "3";
+  } else {
+   const others = ["1","2","4","5","6","7","8","9"];
+   digit = others[Math.floor(Math.random()*others.length)];
+  }
+  list.push({
+   digit,
+   target,
+   response:false,
+   rt:null
+  });
+ }
+ for(let i=list.length-1;i>0;i--){
+  const j=Math.floor(Math.random()*(i+1));
+  [list[i],list[j]]=[list[j],list[i]];
+ }
+ return list;
+}
+
+function showTrial(){
+ if(current >= trials.length){
+  finishTask();
+  return;
+ }
+
+ const trial = trials[current];
+ $("trialInfo").textContent =
+  `مرحله ${current+1} از ${trials.length}`;
+
+ $("progressBar").style.width =
+  `${current/trials.length*100}%`;
+
+ $("stimulus").textContent = trial.digit;
+ $("taskMessage").textContent = "در صورت مشاهده عدد ۳ پاسخ دهید.";
+ $("respondBtn").disabled = false;
+
+ active = true;
+ stimulusStarted = performance.now();
+
+ timer = setTimeout(()=>{
+  if(!active) return;
+  active = false;
+  $("respondBtn").disabled = true;
+  current++;
+  timer = setTimeout(showTrial,500);
+ },1000);
+}
+
+function respond(){
+ if(!active || current>=trials.length) return;
+
+ const trial=trials[current];
+ if(trial.response) return;
+
+ trial.response=true;
+ trial.rt=Math.round(performance.now()-stimulusStarted);
+
+ active=false;
+ clearTimeout(timer);
+ $("respondBtn").disabled=true;
+
+ $("taskMessage").textContent="پاسخ ثبت شد.";
+ current++;
+
+ timer=setTimeout(showTrial,500);
+}
+
+function finishTask(){
+ active=false;
+ $("respondBtn").disabled=true;
+ $("progressBar").style.width="100%";
+ $("stimulus").textContent="✓";
+ $("trialInfo").textContent="آزمون به پایان رسید.";
+
+ const hits=trials.filter(t=>t.target && t.response);
+ const misses=trials.filter(t=>t.target && !t.response);
+ const falseAlarms=trials.filter(t=>!t.target && t.response);
+ const correctRejections=trials.filter(t=>!t.target && !t.response);
+ const rts=hits.map(t=>t.rt);
+ const meanRT=rts.length?
+  Math.round(rts.reduce((a,b)=>a+b,0)/rts.length):null;
+
+ results={
+  id:participant.id,
+  age:participant.age,
+  gender:participant.gender,
+  session:participant.session,
+  date:new Date().toISOString(),
+  task:"نمونه توجه انتخابی",
+  totalTrials:trials.length,
+  targets:trials.filter(t=>t.target).length,
+  hits:hits.length,
+  misses:misses.length,
+  falseAlarms:falseAlarms.length,
+  correctRejections:correctRejections.length,
+  accuracy:Math.round(
+   (hits.length+correctRejections.length)/trials.length*100
+  ),
+  meanRT,
+  trialData:trials.map((t,i)=>({
+   trial:i+1,
+   stimulus:t.digit,
+   target:t.target,
+   response:t.response,
+   reactionTime:t.rt
+  }))
+ };
+
+ $("hits").textContent=results.hits;
+ $("misses").textContent=results.misses;
+ $("falseAlarms").textContent=results.falseAlarms;
+ $("accuracy").textContent=results.accuracy+"%";
+ $("meanRT").textContent=meanRT===null?"-":meanRT;
+
+ $("task").classList.add("hidden");
+ $("result").classList.remove("hidden");
+ $("saveMessage").textContent="";
+}
+
+function startTask(){
+ const id=$("participant").value.trim();
+ if(!id){
+  alert("لطفاً کد آزمودنی را وارد کنید.");
+  $("participant").focus();
+  return;
+ }
+
+ const age=$("age").value;
+ const session=$("session").value;
+
+ if(age && (+age<3 || +age>100)){
+  alert("سن واردشده معتبر نیست.");
+  return;
+ }
+ if(!session || +session<1){
+  alert("شماره جلسه معتبر نیست.");
+  return;
+ }
+
+ participant={
+  id,
+  age:age?Number(age):null,
+  gender:$("gender").value,
+  session:Number(session)
+ };
+
+ trials=makeTrials();
+ current=0;
+ results=null;
+
+ $("setup").classList.remove("hidden");
+ $("result").classList.add("hidden");
+ $("task").classList.remove("hidden");
+ $("startBtn").disabled=true;
+
+ showTrial();
+}
+
+function saveResults(){
+ if(!results) return;
+
+ const data=getData();
+ data.push(results);
+ setData(data);
+
+ $("saveMessage").textContent="نتایج با موفقیت ذخیره شدند.";
+ $("saveBtn").disabled=true;
+ renderHistory();
+}
+
+function renderHistory(){
+ const data=getData();
+ $("totalCount").textContent=data.length;
+
+ if(!data.length){
+  $("history").innerHTML=
+   '<tr><td colspan="5">هنوز داده‌ای ثبت نشده است.</td></tr>';
+  return;
+ }
+
+ $("history").innerHTML=data.slice().reverse().map(item=>`
+  <tr>
+   <td>${escapeHTML(item.id)}</td>
+   <td>${new Date(item.date).toLocaleDateString("fa-IR")}</td>
+   <td>${item.hits}</td>
+   <td>${item.falseAlarms}</td>
+   <td>${item.meanRT??"-"}</td>
+  </tr>
+ `).join("");
+}
+
+function escapeHTML(value){
+ return String(value??"").replace(/[&<>"']/g,
+  c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function exportJSON(){
+ const data=getData();
+ if(!data.length){alert("داده‌ای برای دریافت وجود ندارد.");return;}
+ downloadFile(JSON.stringify(data,null,2),
+  "NeuroCognitive-Results.json","application/json");
+}
+
+function exportCSV(){
+ const data=getData();
+ if(!data.length){alert("داده‌ای برای دریافت وجود ندارد.");return;}
+
+ const rows=[
+  ["ID","Age","Gender","Session","Date","Hits","Misses",
+   "False Alarms","Correct Rejections","Accuracy","Mean RT"]
+ ];
+
+ data.forEach(r=>{
+  rows.push([
+   r.id,r.age,r.gender,r.session,r.date,r.hits,r.misses,
+   r.falseAlarms,r.correctRejections,r.accuracy,r.meanRT
+  ]);
+ });
+
+ const csv=rows.map(row=>row.map(v=>
+  '"'+String(v??"").replace(/"/g,'""')+'"'
+ ).join(",")).join("\n");
+
+ downloadFile(csv,"NeuroCognitive-Results.csv","text/csv;charset=utf-8");
+}
+
+$("startBtn").addEventListener("click",startTask);
+$("respondBtn").addEventListener("click",respond);
+$("saveBtn").addEventListener("click",saveResults);
+$("jsonBtn").addEventListener("click",exportJSON);
+$("csvBtn").addEventListener("click",exportCSV);
+
+$("againBtn").addEventListener("click",()=>{
+ $("result").classList.add("hidden");
+ $("setup").classList.remove("hidden");
+ $("startBtn").disabled=false;
+ $("saveBtn").disabled=false;
+ $("stimulus").textContent="+";
+ $("taskMessage").textContent="برای پاسخ، دکمه پایین را فشار دهید.";
+});
+
+$("instructionsBtn").addEventListener("click",()=>{
+ alert(
+  "راهنمای آزمون:\n"+
+  "۱. کد آزمودنی را وارد کنید.\n"+
+  "۲. آزمودنی در صفحه نمایش اعداد را مشاهده می‌کند.\n"+
+  "۳. فقط هنگام مشاهده عدد ۳ دکمه پاسخ را فشار دهد.\n"+
+  "۴. آزمون شامل ۴۰ محرک است.\n"+
+  "۵. در پایان نتایج را ذخیره کنید.\n\n"+
+  "این تکلیف نمونه و غیرهنجاری است."
+ );
+});
+
+renderHistory();
+</script>
+</body>
+</html>
